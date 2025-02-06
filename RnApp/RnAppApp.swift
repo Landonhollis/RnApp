@@ -11,7 +11,15 @@ import SwiftUI
 struct RnAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
+    }
+}
+
+struct RootView: View {
+    @State private var isDarkMode = false //declare @State here
+    
+    var body: some View {
+        ContentView(isDarkMode: $isDarkMode) //pass binding to child view
     }
 }
