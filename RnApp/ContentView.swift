@@ -7,75 +7,52 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    @StateObject private var viewModel = ContentViewModel()
+struct TopSectionView: View {
+    @Binding var isDarkMode: Bool
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
-                TopSectionView(height: geometry.size.height / 10, viewModel: viewModel)
-                Spacer()
-            }
-        }
-        .preferredColorScheme(viewModel.isDarkMode ? .dark : .light)
-        .edgesIgnoringSafeArea(.top)
-    }
-}
-
-struct TopSectionView: View {
-    let height: CGFloat
-    @ObservedObject var viewModel: ContentViewModel
-    
-    var body: some View {
-        ZStack(alignment: .top) {
-            // Background Color
-            Color("AppBackgroundColor")
-                .frame(height: height)
-
-            HStack {
-                // Left-side "R/N" text
-                Text("R/N")
-                    .font(.custom("Times New Roman", size: height * 0.4))
-                    .foregroundColor(Color("LinesAndTextColor"))
-                    .padding(.leading, height * 0.5)
-
-                Spacer()
-
-                // Right-side button
-                Button(action: {
-                    viewModel.toggleAppearance()
-                }) {
-                    VStack(spacing: 2) { // Stack for two lines of text
-                        Text("Dark Mode")
-                        Text("Light Mode")
+            ZStack(alignment: .top) {
+                Color("AppBackgroundColor")
+                
+                VStack(spacing: 0) {
+                    HStack {
+                        Text("R/N")
+                            .font(.custom("TimesNewRoman", size: geometry.size.height * 0.05))
+                            .foregroundColor(Color("LinesAndTextColor"))
+                            .frame(height: geometry.size.height * 0.1 / 2)
+                            .padding(.leading, geometry.size.width * 0.05)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            isDarkMode.toggle()
+                        }) {
+                            Text("Appearance")
+                                .font(.custom("TimesNewRoman", size: geometry.size.height * 0.02))
+                                .foregroundColor(Color("LinesAndTextColor"))
+                                .padding(.vertical, 5)
+                                .padding(.horizontal, 10)
+                                .background(Color("AppSecondaryColor"))
+                                .cornerRadius(10)
+                        }
+                        .padding(.trailing, geometry.size.width * 0.05)
                     }
-                    .font(.custom("Times New Roman", size: height * 0.2))
-                    .foregroundColor(Color("LinesAndTextColor"))
-                    .padding(.vertical, height * 0.15)
-                    .frame(width: height * 2, height: height * 0.8)
+                    .frame(height: geometry.size.height * 0.1)
+                    
+                    Rectangle()
+                        .fill(Color("LinesAndTextColor"))
+                        .frame(height: 1)
                 }
-                .background(Color("AppSecondaryColor"))
-                .cornerRadius(height * 0.4)
-                .padding(.trailing, height * 0.5)
             }
-            .frame(height: height)
-
-            // Bottom thin bar
-            VStack {
-                Spacer()
-                Rectangle()
-                    .fill(Color("LinesAndTextColor"))
-                    .frame(height: 1)
-                    .frame(maxWidth: .infinity)
-            }
+            .frame(height: geometry.size.height * 0.1)
         }
     }
 }
 
-final class ContentViewModel: ObservableObject {
-    @Published var isDarkMode: Bool = false
-    
-    func toggleAppearance() {
-        isDarkMode.toggle()
+struct TopSectionView_Previews: PreviewProvider {
+    static var previews: some View {
+        TopSectionView(isDarkMode: .constant(false))
     }
 }
+
